@@ -1,0 +1,7 @@
+bin
+obj
+uploads
+*.db
+*.db-shm
+*.db-wal
+*.log

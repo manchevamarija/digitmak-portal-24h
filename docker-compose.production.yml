@@ -1,0 +1,45 @@
+services:
+  postgres:
+    image: postgres:17-alpine
+    restart: unless-stopped
+    env_file: ${ENV_FILE:-.env.production}
+    volumes: [postgres_data:/var/lib/postgresql/data]
+    healthcheck: { test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"], interval: 10s, timeout: 5s, retries: 10 }
+  api:
+    build: ./backend/src/DigitMak.Portal.Api
+    restart: unless-stopped
+    env_file: ${ENV_FILE:-.env.production}
+    environment:
+      ASPNETCORE_ENVIRONMENT: Production
+      ASPNETCORE_URLS: http://+:8080
+      ConnectionStrings__Portal: Host=postgres;Database=${POSTGRES_DB};Username=${POSTGRES_USER};Password=${POSTGRES_PASSWORD}
+      CLAMAV_HOST: clamav
+      CLAMAV_PORT: 3310
+    volumes: [uploads:/var/lib/digitmak-portal/uploads]
+    depends_on:
+      postgres: { condition: service_healthy }
+      clamav: { condition: service_started }
+  clamav:
+    image: clamav/clamav:stable
+    restart: unless-stopped
+    volumes: [clamav_data:/var/lib/clamav]
+  frontend:
+    build: ./frontend
+    restart: unless-stopped
+  nginx:
+    image: nginx:1.29-alpine
+    restart: unless-stopped
+    ports: ["80:80", "443:443"]
+    environment:
+      PORTAL_DOMAIN: ${PORTAL_DOMAIN:-portal.digitmak.mk}
+      NGINX_ENVSUBST_FILTER: PORTAL_DOMAIN
+    volumes:
+      - ./deploy/nginx/portal.conf.template:/etc/nginx/templates/default.conf.template:ro
+      - letsencrypt:/etc/letsencrypt:ro
+      - certbot_www:/var/www/certbot:ro
+    depends_on: [api, frontend]
+  certbot:
+    image: certbot/certbot:latest
+    ports: ["80:80"]
+    volumes: [letsencrypt:/etc/letsencrypt, certbot_www:/var/www/certbot]
+volumes: { postgres_data: {}, uploads: {}, letsencrypt: {}, certbot_www: {}, clamav_data: {} }

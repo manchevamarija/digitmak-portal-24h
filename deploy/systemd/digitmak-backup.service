@@ -1,0 +1,12 @@
+[Unit]
+Description=DigitMak Portal database and uploads backup
+Requires=docker.service
+After=docker.service digitmak-portal.service
+
+[Service]
+Type=oneshot
+WorkingDirectory=/opt/digitmak-portal/current
+Environment=COMPOSE_FILE=docker-compose.production.yml
+Environment=COMPOSE_PROJECT_NAME=digitmak-portal
+Environment=ENV_FILE=/opt/digitmak-portal/shared/.env.production
+ExecStart=/bin/sh deploy/backup.sh

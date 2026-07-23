@@ -1,0 +1,11 @@
+[Unit]
+Description=Run the DigitMak Portal backup every day
+
+[Timer]
+OnCalendar=*-*-* 02:30:00
+Persistent=true
+RandomizedDelaySec=10m
+Unit=digitmak-backup.service
+
+[Install]
+WantedBy=timers.target

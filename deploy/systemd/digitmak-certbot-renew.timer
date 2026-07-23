@@ -1,0 +1,11 @@
+[Unit]
+Description=Check DigitMak Portal TLS renewal twice daily
+
+[Timer]
+OnCalendar=*-*-* 00,12:00:00
+Persistent=true
+RandomizedDelaySec=30m
+Unit=digitmak-certbot-renew.service
+
+[Install]
+WantedBy=timers.target

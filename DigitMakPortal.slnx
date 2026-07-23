@@ -1,0 +1,9 @@
+<Solution>
+  <Folder Name="/backend/" />
+  <Folder Name="/backend/src/">
+    <Project Path="backend/src/DigitMak.Portal.Api/DigitMak.Portal.Api.csproj" />
+  </Folder>
+  <Folder Name="/backend/tests/">
+    <Project Path="backend/tests/DigitMak.Portal.Api.Tests/DigitMak.Portal.Api.Tests.csproj" />
+  </Folder>
+</Solution>

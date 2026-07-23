@@ -1,0 +1,48 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+  </PropertyGroup>
+
+  <!--
+    Single project, four onion layers as folders — Domain / Application / Infrastructure / Web —
+    instead of four separate assemblies. Sdk.Web already gives the whole ASP.NET Core shared
+    framework (Identity, JWT bearer, SignalR, rate limiting, IFormFile, health checks) for free,
+    so unlike a multi-project split there is no need for granular Http.Abstractions/SignalR.Core
+    package references or a FrameworkReference workaround — only genuinely external NuGet
+    packages are listed below.
+  -->
+
+  <ItemGroup>
+    <!-- Domain layer: entities use IdentityUser<Guid>/IdentityRole<Guid> as their base class. -->
+    <PackageReference Include="Microsoft.Extensions.Identity.Stores" Version="10.0.3" />
+
+    <!-- Infrastructure layer: EF Core + providers + the Identity/EF bridge. -->
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="10.0.3" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="10.0.3">
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+      <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
+    <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="10.0.3" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="10.0.3" />
+    <PackageReference Include="SQLitePCLRaw.lib.e_sqlite3" Version="2.1.12" />
+    <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="10.0.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="10.0.3" />
+
+    <!-- Application layer: reports and scheduled jobs. -->
+    <PackageReference Include="ClosedXML" Version="0.105.0" />
+    <PackageReference Include="Quartz" Version="3.13.1" />
+    <PackageReference Include="Quartz.Extensions.Hosting" Version="3.13.1" />
+    <PackageReference Include="Quartz.Extensions.DependencyInjection" Version="3.13.1" />
+
+    <!-- Web layer: OpenAPI/Swagger tooling. -->
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="10.0.3" />
+    <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="8.16.0" />
+    <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="10.0.3" />
+    <PackageReference Include="Microsoft.OpenApi" Version="2.11.0" />
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="10.1.5" />
+  </ItemGroup>
+
+</Project>

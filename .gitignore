@@ -1,0 +1,32 @@
+# Frontend
+node_modules/
+dist/
+coverage/
+
+# Backend
+bin/
+obj/
+TestResults/
+
+# Environment and secrets
+.env
+.env.*
+!.env.example
+appsettings.Production.json
+
+# IDE
+.idea/
+.vs/
+.vscode/
+*.user
+*.suo
+
+# Local data
+uploads/
+backups/
+*.db
+*.sqlite
+
+# OS
+.DS_Store
+Thumbs.db
